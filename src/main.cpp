@@ -111,7 +111,7 @@ lemlib::ControllerSettings linearController(12, // proportional gain (kP)
 // angular motion controller
 lemlib::ControllerSettings angularController(4, // proportional gain (kP)
                                              0.02, // integral gain (kI)
-                                             40, // derivative gain (kD)
+                                             46, // derivative gain (kD)
                                              3, // anti windup (3)
                                              0.2, // small error range, in degrees (0.2)
                                              100, // small error range timeout, in milliseconds (100)
@@ -222,43 +222,77 @@ void midHigh(double side) {
     intaking(127);
 }
 
-void halfWPM() {
-    intaking(127);
+void halfWPL() {
     chassis.moveToPoint(0, 10,1000);
-    chassis.moveToPoint(-8, 26, 1000,{.maxSpeed = 50});
+    chassis.moveToPoint(6, 29, 1000,{.maxSpeed = 50});
+    intaking(70);
     chassis.moveToPoint(0, 15, 1000, {.forwards = false});
-    chassis.moveToPoint(0, 30, 1000,{.forwards = true});
+    toggleDoinker();
+    chassis.moveToPoint(0, 26, 1000,{.forwards = true});
+    toggleDoinker();
+    chassis.turnToHeading(-45, 1000);
+    intaking(0);
+    chassis.moveToPoint(-13, 47, 1000, {.maxSpeed = 50}); //15, 50
+    pros::delay(250);
+    intaking(-127);
+    pros::delay(6700);
+    chassis.moveToPoint(0, 20, 1000, {.forwards = false});
+    /*chassis.moveToPoint(0, 20, 1000, {.forwards = false});
+    chassis.turnToHeading(90, 100);
+    chassis.turnToPoint(20, 17, 1000);
+    chassis.moveToPoint(20, 17, 1000, {.maxSpeed = 90});
+    chassis.turnToHeading(180, 1000);
+    intaking(127);
+    toggleDoinker();
+    chassis.moveToPoint(22, -30, 1000, {.minSpeed = 40});
+    pros::delay(2000);
+    intaking(0);
+    chassis.moveToPoint(29, -5, 1000, {.forwards=false});
+    toggleDoinker();
+    chassis.turnToHeading(0, 1000);
+    chassis.moveToPoint(30, 20, 1000, {.maxSpeed=100});
+    intaking(127);
+    */
 }
 
 void nineBlocksM() {
+    //chassis.moveToPoint(2, 12, 1000,{.maxSpeed = 80});
+    chassis.moveToPoint(-7, 28, 1000,{.maxSpeed = 80});
     intaking(85);
-    chassis.moveToPoint(5, 12, 1000,{.maxSpeed = 80});
-    //chassis.turnToPoint(-6, 25, 1000);
-    chassis.moveToPoint(-10, 28, 1000,{.maxSpeed = 80});
-    chassis.moveToPoint(-15, 30, 1000, {.maxSpeed = 60});
-    pros::delay(500);
-    chassis.moveToPoint(-17, 20, 1000,{.maxSpeed = 60});
-    chassis.moveToPoint(-30, 14, 1000, {.maxSpeed = 80});
-    intaking(0);
-    chassis.turnToHeading(0, 1000);
-    chassis.moveToPoint(-32, 28, 1000,{.maxSpeed = 60});
-    pros::delay(500);
-    intaking(127);
-    pros::delay(2000);
-    chassis.moveToPoint(-32, 15, 1000,{.forwards = false});
-    chassis.turnToHeading(180, 1000);
+    chassis.moveToPoint(-10, 30, 1000, {.maxSpeed = 60});
     toggleDoinker();
-    intaking(127);
-    chassis.moveToPoint(-31, 0, 1000,{.maxSpeed = 127, .minSpeed=90});
-    chassis.turnToHeading(180, 1000);
-    chassis.moveToPoint(-31, -5, 1000,{.maxSpeed = 127, .minSpeed=100});
-    pros::delay(500);
+    pros::delay(250);
+    
+    chassis.moveToPoint(-15, 20, 1000,{.maxSpeed = 60});
+    toggleDoinker();
     intaking(0);
-    chassis.moveToPoint(-32, 7, 1000,{.forwards=false});
+    chassis.moveToPoint(-28, 14, 1000, {.maxSpeed = 80});
+    //toggleDoinker();
+    chassis.turnToHeading(0, 1000);
+    chassis.moveToPoint(-33, 28, 1000,{.maxSpeed = 60});
+
+    pros::delay(200);
+    intaking(127);
+    pros::delay(3000);
+
+    chassis.moveToPoint(-33, 5, 1000,{.forwards = false});
+    pros::delay(100);
+    chassis.turnToHeading(180, 1000);
+
+    
+    intaking(127);
+
+    toggleDoinker();
+    chassis.moveToPoint(-33, -15, 1000,{.maxSpeed = 127, .minSpeed=100});
+    chassis.turnToHeading(180, 1000);
+    //chassis.moveToPoint(-33, -15, 1000,{.maxSpeed = 127, .minSpeed=100});
+    pros::delay(1500);
+    intaking(0);
+    chassis.moveToPoint(-31, 7, 1000,{.forwards=false});
     chassis.turnToHeading(0, 1000);
     intaking(0);
     toggleDoinker();
-    chassis.moveToPoint(-31.5, 25, 1000, {.maxSpeed=60});
+    chassis.moveToPoint(-31, 25, 1000, {.maxSpeed=60});
     intaking(127);
 }
 
@@ -367,9 +401,10 @@ void autonomous() {
     // 1 = red
     // -1 = blue
 
-    //halfWPM();
-    chassis.moveToPoint(0, 40, 1000, {.maxSpeed=127*0.8,.minSpeed=127*0.6} );
+    halfWPL();
     //chassis.turnToHeading(90, 1000);
+
+    //intaking(127);
 
     while (true) {    
         lemlib::Pose pose = chassis.getPose();
